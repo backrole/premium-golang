@@ -1,4 +1,4 @@
-## Session
+## Login
 
 /api/v1/sessions
 
