@@ -26,6 +26,7 @@ func (r *repo) Save(user User) (User, error) {
 
 func (r *repo) FindByEmail(email string) (User, error) {
 	var user User
+
 	err := r.db.Where("email = ?", email).Find(&user).Error
 	if err != nil {
 		return user, err

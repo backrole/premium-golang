@@ -9,7 +9,7 @@ import (
 type Service interface {
 	RegisterUser(input RegisterUserInput) (User, error)
 	Login(input LoginInput) (User, error)
-	IsEmailAvailabel(input CheckEmailInput) (bool, error)
+	IsEmailAvailable(input CheckEmailInput) (bool, error)
 }
 
 type service struct {
@@ -64,7 +64,7 @@ func (s *service) Login(input LoginInput) (User, error) {
 	return user, nil
 }
 
-func (s *service) IsEmailAvailabel(input CheckEmailInput) (bool, error) {
+func (s *service) IsEmailAvailable(input CheckEmailInput) (bool, error) {
 	email := input.Email
 
 	user, err := s.repo.FindByEmail(email)
@@ -76,5 +76,5 @@ func (s *service) IsEmailAvailabel(input CheckEmailInput) (bool, error) {
 		return true, nil
 	}
 
-	return true, nil
+	return false, nil
 }
