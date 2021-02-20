@@ -1,7 +1,7 @@
 package produk
 
 type Service interface {
-	FindProduks(userID int) ([]Produk, error)
+	GetProduks(userID int) ([]Produk, error)
 }
 
 type service struct {
@@ -12,7 +12,7 @@ func NewService(repo Repo) *service {
 	return &service{repo}
 }
 
-func (s *service) FindProduks(userID int) ([]Produk, error) {
+func (s *service) GetProduks(userID int) ([]Produk, error) {
 	if userID != 0 {
 		produks, err := s.repo.FindByUserID(userID)
 		if err != nil {

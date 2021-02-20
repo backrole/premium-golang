@@ -1,1 +1,34 @@
 package handler
+
+import (
+	"net/http"
+	"premium/helper"
+	"premium/produk"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
+)
+
+type produkHandler struct {
+	service produk.Service
+}
+
+func NewProdukHandelr(service produk.Service) *produkHandler {
+	return &produkHandler{service}
+}
+
+func (h *produkHandler) GetProduks(c *gin.Context) {
+	userID, _ := strconv.Atoi(c.Query("user_id"))
+
+	produk, err := h.service.GetProduks(userID)
+
+	if err != nil {
+		response := helper.APIResponse("Error get produk", http.StatusBadRequest, "error", nil)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("List produk", http.StatusOK, "error", produk)
+	c.JSON(http.StatusOK, response)
+}

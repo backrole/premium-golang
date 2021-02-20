@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"premium/auth"
@@ -32,11 +31,8 @@ func main() {
 	produkService := produk.NewService(produkRepo)
 	authService := auth.NewService()
 
-	produks, _ := produkService.FindProduks(4)
-
-	fmt.Println(len(produks))
-
 	userHandler := handler.NewUserHandler(userService, authService)
+	produkHandler := handler.NewProdukHandelr(produkService)
 
 	router := gin.Default()
 
@@ -45,6 +41,7 @@ func main() {
 	api.POST("/sessions", userHandler.Login)
 	api.POST("/email_ceks", userHandler.CheckEmailAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+	api.GET("/produks", produkHandler.GetProduks)
 
 	router.Run()
 }
