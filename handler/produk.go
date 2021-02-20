@@ -20,7 +20,7 @@ func NewProdukHandelr(service produk.Service) *produkHandler {
 func (h *produkHandler) GetProduks(c *gin.Context) {
 	userID, _ := strconv.Atoi(c.Query("user_id"))
 
-	produk, err := h.service.GetProduks(userID)
+	produks, err := h.service.GetProduks(userID)
 
 	if err != nil {
 		response := helper.APIResponse("Error get produk", http.StatusBadRequest, "error", nil)
@@ -29,6 +29,6 @@ func (h *produkHandler) GetProduks(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("List produk", http.StatusOK, "error", produk)
+	response := helper.APIResponse("List produk", http.StatusOK, "error", produk.FormatProduks(produks))
 	c.JSON(http.StatusOK, response)
 }
