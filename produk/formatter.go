@@ -7,6 +7,7 @@ type ProdukFormatter struct {
 	Judul      string `json:"judul"`
 	GambarURL  string `json:"gambar_url"`
 	Harga      int    `json:"harga"`
+	Slug       string `json:"slug"`
 }
 
 func FormatProduk(produk Produk) ProdukFormatter {
@@ -16,6 +17,7 @@ func FormatProduk(produk Produk) ProdukFormatter {
 	produkFormatter.NamaProduk = produk.NamaProduk
 	produkFormatter.Judul = produk.Judul
 	produkFormatter.Harga = produk.Harga
+	produkFormatter.Slug = produk.Slug
 	produkFormatter.GambarURL = ""
 
 	if len(produk.GambarProduks) > 0 {
