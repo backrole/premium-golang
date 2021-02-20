@@ -2,6 +2,7 @@ package produk
 
 type Service interface {
 	GetProduks(userID int) ([]Produk, error)
+	GetProdukByID(input GetProdukDetailInput) (Produk, error)
 }
 
 type service struct {
@@ -28,4 +29,14 @@ func (s *service) GetProduks(userID int) ([]Produk, error) {
 	}
 
 	return produks, nil
+}
+
+func (s *service) GetProdukByID(input GetProdukDetailInput) (Produk, error) {
+	produk, err := s.repo.FindByID(input.ID)
+
+	if err != nil {
+		return produk, err
+	}
+
+	return produk, nil
 }

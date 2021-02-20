@@ -5,6 +5,7 @@ import "gorm.io/gorm"
 type Repo interface {
 	FindAll() ([]Produk, error)
 	FindByUserID(userID int) ([]Produk, error)
+	FindByID(ID int) (Produk, error)
 }
 
 type repo struct {
@@ -36,4 +37,15 @@ func (r *repo) FindByUserID(userID int) ([]Produk, error) {
 
 	return produks, nil
 
+}
+
+func (r *repo) FindByID(ID int) (Produk, error) {
+	var produk Produk
+
+	err := r.db.Preload("User").Preload("GambarProduks").Where("id = ?", ID).Find(&produk).Error
+	if err != nil {
+		return produk, err
+	}
+
+	return produk, nil
 }

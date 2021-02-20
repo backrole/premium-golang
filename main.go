@@ -43,6 +43,7 @@ func main() {
 	api.POST("/email_ceks", userHandler.CheckEmailAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
 	api.GET("/produks", produkHandler.GetProduks)
+	api.GET("/produks/:id", produkHandler.GetProduk)
 
 	router.Run()
 }

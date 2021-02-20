@@ -1,6 +1,9 @@
 package produk
 
-import "time"
+import (
+	"premium/user"
+	"time"
+)
 
 type Produk struct {
 	ID            int
@@ -10,10 +13,12 @@ type Produk struct {
 	Deskripsi     string
 	JumlahPembeli int
 	Harga         int
+	Perks         string
 	Slug          string
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 	GambarProduks []GambarProduk
+	User          user.User
 }
 
 type GambarProduk struct {

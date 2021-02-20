@@ -32,3 +32,28 @@ func (h *produkHandler) GetProduks(c *gin.Context) {
 	response := helper.APIResponse("List produk", http.StatusOK, "error", produk.FormatProduks(produks))
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *produkHandler) GetProduk(c *gin.Context) {
+	var input produk.GetProdukDetailInput
+
+	err := c.ShouldBindUri(&input)
+	if err != nil {
+		response := helper.APIResponse("Gagal get detail produk", http.StatusBadRequest, "error", nil)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	produkDetail, err := h.service.GetProdukByID(input)
+	if err != nil {
+		response := helper.APIResponse("Gagal get detail produk", http.StatusBadRequest, "error", nil)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Detail produk", http.StatusOK, "sukses", produk.FormatProdukDetail(produkDetail))
+
+	c.JSON(http.StatusOK, response)
+	return
+}
