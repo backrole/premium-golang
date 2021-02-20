@@ -1,6 +1,7 @@
 package produk
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/gosimple/slug"
@@ -10,6 +11,7 @@ type Service interface {
 	GetProduks(userID int) ([]Produk, error)
 	GetProdukByID(input GetProdukDetailInput) (Produk, error)
 	CreateProduk(input CreateProdukInput) (Produk, error)
+	UpdateProduk(inputID GetProdukDetailInput, inputData CreateProdukInput) (Produk, error)
 }
 
 type service struct {
@@ -66,4 +68,27 @@ func (s *service) CreateProduk(input CreateProdukInput) (Produk, error) {
 	}
 
 	return newProduk, nil
+}
+func (s *service) UpdateProduk(inputID GetProdukDetailInput, inputData CreateProdukInput) (Produk, error) {
+	produk, err := s.repo.FindByID(inputID.ID)
+	if err != nil {
+		return produk, err
+	}
+
+	if produk.UserID != inputData.User.ID {
+		return produk, errors.New("Anda bukan pemilik produk")
+	}
+
+	produk.NamaProduk = inputData.NamaProduk
+	produk.Judul = inputData.Judul
+	produk.Deskripsi = inputData.Deskripsi
+	produk.Harga = inputData.Harga
+	produk.Perks = inputData.Perks
+
+	updateProduk, err := s.repo.Update(produk)
+	if err != nil {
+		return updateProduk, err
+	}
+
+	return updateProduk, nil
 }

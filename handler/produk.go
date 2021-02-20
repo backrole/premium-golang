@@ -88,3 +88,40 @@ func (h *produkHandler) CreateProduk(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 
 }
+
+func (h *produkHandler) UpdateProduk(c *gin.Context) {
+	var inputID produk.GetProdukDetailInput
+
+	err := c.ShouldBindUri(&inputID)
+	if err != nil {
+		response := helper.APIResponse("Gagal update produk", http.StatusBadRequest, "error", nil)
+
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	var inputData produk.CreateProdukInput
+
+	err = c.ShouldBindJSON(&inputData)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("gagal update produk", http.StatusUnprocessableEntity, "Error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	currentUser := c.MustGet("currentUser").(user.User)
+
+	inputData.User = currentUser
+
+	updateProduk, err := h.service.UpdateProduk(inputID, inputData)
+	if err != nil {
+		response := helper.APIResponse("gagal update produk", http.StatusBadRequest, "Error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Sukses update produk", http.StatusOK, "Sukses", produk.FormatProduk(updateProduk))
+	c.JSON(http.StatusOK, response)
+}
