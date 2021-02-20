@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"premium/auth"
 	"premium/handler"
 	"premium/helper"
+	"premium/produk"
 	"premium/user"
 	"strings"
 
@@ -24,6 +26,21 @@ func main() {
 	}
 
 	userRepo := user.NewRepo(db)
+	produkRepo := produk.NewRepo(db)
+
+	produks, err := produkRepo.FindByUserID(4)
+
+	fmt.Println("debug")
+	fmt.Println("debug")
+	fmt.Println("debug")
+	fmt.Println(len(produks))
+	for _, produk := range produks {
+		fmt.Println(produk.NamaProduk)
+		if len(produk.GambarProduks) > 0 {
+			fmt.Println(produk.GambarProduks[0].NamaGambar)
+		}
+	}
+
 	userService := user.NewService(userRepo)
 	authService := auth.NewService()
 
