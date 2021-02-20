@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"premium/helper"
 	"premium/produk"
+	"premium/user"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -56,4 +57,34 @@ func (h *produkHandler) GetProduk(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 	return
+}
+
+func (h *produkHandler) CreateProduk(c *gin.Context) {
+	var input produk.CreateProdukInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("gagal create produk", http.StatusUnprocessableEntity, "Error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+
+	input.User = currentUser
+
+	newProduk, err := h.service.CreateProduk(input)
+	if err != nil {
+
+		response := helper.APIResponse("gagal create produk", http.StatusBadRequest, "Error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Sukses create produk", http.StatusOK, "Sukses", produk.FormatProduk(newProduk))
+	c.JSON(http.StatusOK, response)
+
 }
