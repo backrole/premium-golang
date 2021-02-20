@@ -28,21 +28,13 @@ func main() {
 	userRepo := user.NewRepo(db)
 	produkRepo := produk.NewRepo(db)
 
-	produks, err := produkRepo.FindByUserID(4)
-
-	fmt.Println("debug")
-	fmt.Println("debug")
-	fmt.Println("debug")
-	fmt.Println(len(produks))
-	for _, produk := range produks {
-		fmt.Println(produk.NamaProduk)
-		if len(produk.GambarProduks) > 0 {
-			fmt.Println(produk.GambarProduks[0].NamaGambar)
-		}
-	}
-
 	userService := user.NewService(userRepo)
+	produkService := produk.NewService(produkRepo)
 	authService := auth.NewService()
+
+	produks, _ := produkService.FindProduks(4)
+
+	fmt.Println(len(produks))
 
 	userHandler := handler.NewUserHandler(userService, authService)
 
