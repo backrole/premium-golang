@@ -14,3 +14,9 @@ type CreateProdukInput struct {
 	Perks      string `json:"perks" binding:"required"`
 	User       user.User
 }
+
+type CreateGambarProdukInput struct {
+	ProdukID  int  `form:"produk_id" binding:"required"`
+	IsPrimary bool `form:"is_primary" binding:"required"`
+	User      user.User
+}

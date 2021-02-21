@@ -12,6 +12,7 @@ type Service interface {
 	GetProdukByID(input GetProdukDetailInput) (Produk, error)
 	CreateProduk(input CreateProdukInput) (Produk, error)
 	UpdateProduk(inputID GetProdukDetailInput, inputData CreateProdukInput) (Produk, error)
+	SaveGambarProduk(input CreateGambarProdukInput, fileLocation string) (GambarProduk, error)
 }
 
 type service struct {
@@ -91,4 +92,38 @@ func (s *service) UpdateProduk(inputID GetProdukDetailInput, inputData CreatePro
 	}
 
 	return updateProduk, nil
+}
+
+func (s *service) SaveGambarProduk(input CreateGambarProdukInput, fileLocation string) (GambarProduk, error) {
+	produk, err := s.repo.FindByID(input.ProdukID)
+	if err != nil {
+		return GambarProduk{}, err
+	}
+	if produk.UserID != input.User.ID {
+		return GambarProduk{}, errors.New("Anda bukan pemilik produk")
+	}
+
+	isPrimary := 0
+
+	if input.IsPrimary {
+		isPrimary = 1
+
+		_, err := s.repo.MarkAllGambarAsNonPrimary(input.ProdukID)
+		if err != nil {
+			return GambarProduk{}, err
+		}
+	}
+
+	gambarProduk := GambarProduk{}
+	gambarProduk.ProdukID = input.ProdukID
+
+	gambarProduk.IsPrimary = isPrimary
+	gambarProduk.NamaGambar = fileLocation
+
+	newGambarProduk, err := s.repo.CreateGambar(gambarProduk)
+	if err != nil {
+		return newGambarProduk, err
+	}
+
+	return newGambarProduk, nil
 }

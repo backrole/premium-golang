@@ -8,6 +8,8 @@ type Repo interface {
 	FindByID(ID int) (Produk, error)
 	Save(produk Produk) (Produk, error)
 	Update(produk Produk) (Produk, error)
+	CreateGambar(gambarProduk GambarProduk) (GambarProduk, error)
+	MarkAllGambarAsNonPrimary(produkID int) (bool, error)
 }
 
 type repo struct {
@@ -68,4 +70,22 @@ func (r *repo) Update(produk Produk) (Produk, error) {
 	}
 
 	return produk, nil
+}
+
+func (r *repo) CreateGambar(gambarProduk GambarProduk) (GambarProduk, error) {
+	err := r.db.Create(&gambarProduk).Error
+
+	if err != nil {
+		return gambarProduk, err
+	}
+	return gambarProduk, nil
+}
+
+func (r *repo) MarkAllGambarAsNonPrimary(produkID int) (bool, error) {
+	err := r.db.Model(&GambarProduk{}).Where("produk_id = ?", produkID).Update("is_primary", false).Error
+
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

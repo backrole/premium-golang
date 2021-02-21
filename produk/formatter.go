@@ -41,7 +41,7 @@ func FormatProduks(produks []Produk) []ProdukFormatter {
 
 type ProdukDetailFormatter struct {
 	ID            int                    `json:"id"`
-	NamaGambar    string                 `json:"namagambar"`
+	NamaProduk    string                 `json:"nama_produk"`
 	Judul         string                 `json:"judul"`
 	Deskripsi     string                 `json:"deskripsi"`
 	GambarURL     string                 `json:"gambar_url"`
@@ -60,14 +60,14 @@ type ProdukUserFormatter struct {
 }
 
 type ProdukImageFormatter struct {
-	GambarProduk string `json:"gambar_url"`
-	IsPrimary    bool   `json:"is_primary"`
+	NamaGambar string `json:"gambar_url"`
+	IsPrimary  bool   `json:"is_primary"`
 }
 
 func FormatProdukDetail(produk Produk) ProdukDetailFormatter {
 	produkDetailFormatter := ProdukDetailFormatter{}
 	produkDetailFormatter.ID = produk.ID
-	produkDetailFormatter.NamaGambar = produk.NamaProduk
+	produkDetailFormatter.NamaProduk = produk.NamaProduk
 	produkDetailFormatter.Judul = produk.Judul
 	produkDetailFormatter.Deskripsi = produk.Deskripsi
 	produkDetailFormatter.JumlahPembeli = produk.JumlahPembeli
@@ -98,7 +98,7 @@ func FormatProdukDetail(produk Produk) ProdukDetailFormatter {
 
 	for _, image := range produk.GambarProduks {
 		produkImageFormatter := ProdukImageFormatter{}
-		produkImageFormatter.GambarProduk = image.NamaGambar
+		produkImageFormatter.NamaGambar = image.NamaGambar
 
 		isPrimary := false
 		if image.IsPrimary == 1 {
