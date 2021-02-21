@@ -1,6 +1,7 @@
 package transaksi
 
 import (
+	"premium/produk"
 	"premium/user"
 	"time"
 )
@@ -13,6 +14,7 @@ type Transaksi struct {
 	Status    string
 	Code      string
 	User      user.User
+	Produk    produk.Produk
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

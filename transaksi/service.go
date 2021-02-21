@@ -12,6 +12,7 @@ type service struct {
 
 type Service interface {
 	GetTransaksiByProdukID(input GetProdukTransaksisInput) ([]Transaksi, error)
+	GetTransaksiByUserID(userID int) ([]Transaksi, error)
 }
 
 func NewService(repo Repo, produkRepo produk.Repo) *service {
@@ -30,6 +31,15 @@ func (s *service) GetTransaksiByProdukID(input GetProdukTransaksisInput) ([]Tran
 	}
 
 	transaksis, err := s.repo.GetByProdukID(input.ID)
+	if err != nil {
+		return transaksis, err
+	}
+
+	return transaksis, nil
+}
+
+func (s *service) GetTransaksiByUserID(userID int) ([]Transaksi, error) {
+	transaksis, err := s.repo.GetByUserID(userID)
 	if err != nil {
 		return transaksis, err
 	}

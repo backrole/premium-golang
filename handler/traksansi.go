@@ -40,3 +40,17 @@ func (h *transaksiHandler) GetProdukTransaksis(c *gin.Context) {
 	response := helper.APIResponse("Sukses get transaksi produk", http.StatusOK, "sukses", transaksi.FormatProdukTransaksis(transaksis))
 	c.JSON(http.StatusOK, response)
 }
+func (h *transaksiHandler) GetUserTransaksis(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(user.User)
+	userID := currentUser.ID
+
+	transaksis, err := h.service.GetTransaksiByUserID(userID)
+	if err != nil {
+		response := helper.APIResponse("User gagal transaksi produk", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("User sukses transaksi produk", http.StatusOK, "sukses", transaksi.FormatUserTransaksis(transaksis))
+	c.JSON(http.StatusOK, response)
+}
