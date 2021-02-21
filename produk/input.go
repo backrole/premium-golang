@@ -17,6 +17,6 @@ type CreateProdukInput struct {
 
 type CreateGambarProdukInput struct {
 	ProdukID  int  `form:"produk_id" binding:"required"`
-	IsPrimary bool `form:"is_primary" binding:"required"`
+	IsPrimary bool `form:"is_primary"`
 	User      user.User
 }
