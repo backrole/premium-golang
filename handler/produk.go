@@ -135,7 +135,7 @@ func (h *produkHandler) UploadGambar(c *gin.Context) {
 		errors := helper.FormatValidationError(err)
 		errorMessage := gin.H{"errors": errors}
 
-		response := helper.APIResponse("gagal update gambar produk", http.StatusUnprocessableEntity, "Error", errorMessage)
+		response := helper.APIResponse("Gagal upload gambar produk", http.StatusUnprocessableEntity, "Error", errorMessage)
 		c.JSON(http.StatusUnprocessableEntity, response)
 		return
 	}
