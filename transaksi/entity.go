@@ -1,6 +1,9 @@
 package transaksi
 
-import "time"
+import (
+	"premium/user"
+	"time"
+)
 
 type Transaksi struct {
 	ID        int
@@ -9,6 +12,7 @@ type Transaksi struct {
 	Harga     int
 	Status    string
 	Code      string
+	User      user.User
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

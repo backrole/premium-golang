@@ -7,6 +7,7 @@ import (
 	"premium/handler"
 	"premium/helper"
 	"premium/produk"
+	"premium/transaksi"
 	"premium/user"
 	"strings"
 
@@ -26,13 +27,16 @@ func main() {
 
 	userRepo := user.NewRepo(db)
 	produkRepo := produk.NewRepo(db)
+	transaksiRepo := transaksi.NewRepo(db)
 
 	userService := user.NewService(userRepo)
 	produkService := produk.NewService(produkRepo)
 	authService := auth.NewService()
+	transaksiService := transaksi.NewService(transaksiRepo, produkRepo)
 
 	userHandler := handler.NewUserHandler(userService, authService)
 	produkHandler := handler.NewProdukHandelr(produkService)
+	transaksiHandler := handler.NewTransaksiHandler(transaksiService)
 
 	router := gin.Default()
 	router.Static("/images", "./images")
@@ -47,6 +51,7 @@ func main() {
 	api.POST("/produks", authMiddleware(authService, userService), produkHandler.CreateProduk)
 	api.PUT("/produks/:id", authMiddleware(authService, userService), produkHandler.UpdateProduk)
 	api.POST("/gambar-produks", authMiddleware(authService, userService), produkHandler.UploadGambar)
+	api.GET("/produk/:id/transaksi", authMiddleware(authService, userService), transaksiHandler.GetProdukTransaksis)
 
 	router.Run()
 }
