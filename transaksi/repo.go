@@ -11,6 +11,8 @@ type repo struct {
 type Repo interface {
 	GetByProdukID(produkID int) ([]Transaksi, error)
 	GetByUserID(userID int) ([]Transaksi, error)
+	Save(transaksi Transaksi) (Transaksi, error)
+	Update(transaksi Transaksi) (Transaksi, error)
 }
 
 func NewRepo(db *gorm.DB) *repo {
@@ -38,4 +40,20 @@ func (r *repo) GetByUserID(userID int) ([]Transaksi, error) {
 	}
 	return transaksis, nil
 
+}
+func (r *repo) Save(transaksi Transaksi) (Transaksi, error) {
+	err := r.db.Create(&transaksi).Error
+	if err != nil {
+		return transaksi, err
+	}
+	return transaksi, nil
+}
+
+func (r *repo) Update(transaksi Transaksi) (Transaksi, error) {
+	err := r.db.Save(&transaksi).Error
+	if err != nil {
+		return transaksi, err
+	}
+
+	return transaksi, nil
 }

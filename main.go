@@ -6,6 +6,7 @@ import (
 	"premium/auth"
 	"premium/handler"
 	"premium/helper"
+	"premium/payment"
 	"premium/produk"
 	"premium/transaksi"
 	"premium/user"
@@ -31,8 +32,9 @@ func main() {
 
 	userService := user.NewService(userRepo)
 	produkService := produk.NewService(produkRepo)
+	paymentService := payment.NewService()
 	authService := auth.NewService()
-	transaksiService := transaksi.NewService(transaksiRepo, produkRepo)
+	transaksiService := transaksi.NewService(transaksiRepo, produkRepo, paymentService)
 
 	userHandler := handler.NewUserHandler(userService, authService)
 	produkHandler := handler.NewProdukHandelr(produkService)
@@ -53,6 +55,7 @@ func main() {
 	api.POST("/gambar-produks", authMiddleware(authService, userService), produkHandler.UploadGambar)
 	api.GET("/produk/:id/transaksi", authMiddleware(authService, userService), transaksiHandler.GetProdukTransaksis)
 	api.GET("/transaksi", authMiddleware(authService, userService), transaksiHandler.GetUserTransaksis)
+	api.POST("/transaksi", authMiddleware(authService, userService), transaksiHandler.CreaterTransaksi)
 
 	router.Run()
 }

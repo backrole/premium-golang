@@ -54,3 +54,31 @@ func (h *transaksiHandler) GetUserTransaksis(c *gin.Context) {
 	response := helper.APIResponse("User sukses transaksi produk", http.StatusOK, "sukses", transaksi.FormatUserTransaksis(transaksis))
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *transaksiHandler) CreaterTransaksi(c *gin.Context) {
+	var input transaksi.CreateTransaksiInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Gagal create transaksi", http.StatusUnprocessableEntity, "Error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	currentUser := c.MustGet("currentUser").(user.User)
+	input.User = currentUser
+
+	newTransaksi, err := h.service.CreateTransaksi(input)
+	if err != nil {
+		response := helper.APIResponse("Gagal create transaksi", http.StatusBadRequest, "Error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Sukses create transaksi", http.StatusOK, "Sukses", newTransaksi)
+	c.JSON(http.StatusOK, response)
+	return
+
+}
