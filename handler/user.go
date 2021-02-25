@@ -55,6 +55,8 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 }
 
 func (h *userHandler) Login(c *gin.Context) {
+	
+	
 	var input user.LoginInput
 
 	err := c.ShouldBindJSON(&input)

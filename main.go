@@ -42,7 +42,6 @@ func main() {
 
 	router := gin.Default()
 	router.Static("/images", "./images")
-
 	api := router.Group("/api/v1")
 	api.POST("/users", userHandler.RegisterUser)
 	api.POST("/sessions", userHandler.Login)
@@ -55,9 +54,8 @@ func main() {
 	api.POST("/gambar-produks", authMiddleware(authService, userService), produkHandler.UploadGambar)
 	api.GET("/produk/:id/transaksi", authMiddleware(authService, userService), transaksiHandler.GetProdukTransaksis)
 	api.GET("/transaksi", authMiddleware(authService, userService), transaksiHandler.GetUserTransaksis)
-	api.POST("/transaksi", authMiddleware(authService, userService), transaksiHandler.CreaterTransaksi)
-
-	router.Run()
+	api.POST("/transaksis", authMiddleware(authService, userService), transaksiHandler.CreateTransaksi)
+	router.Run(":8888")
 }
 func authMiddleware(authService auth.Service, userService user.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -98,5 +96,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 		}
 
 		c.Set("currentUser", user)
+
 	}
+
 }

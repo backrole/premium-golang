@@ -34,11 +34,12 @@ func FormatProdukTransaksis(transaksi []Transaksi) []ProdukTransaksiFormatter {
 }
 
 type UserTransaksiFormatter struct {
-	ID        int             `json:"id"`
-	Harga     int             `json:"harga"`
-	Status    string          `json:"status"`
-	CreatedAt time.Time       `json:"created_at"`
-	Produk    ProdukFormatter `json:"produk"`
+	ID         int             `json:"id"`
+	Harga      int             `json:"harga"`
+	Status     string          `json:"status"`
+	PaymentURL string          `json:"payment_url"`
+	CreatedAt  time.Time       `json:"created_at"`
+	Produk     ProdukFormatter `json:"produk"`
 }
 
 type ProdukFormatter struct {
@@ -52,9 +53,8 @@ func FormatUserTransaksi(transaksi Transaksi) UserTransaksiFormatter {
 	formatter.Harga = transaksi.Harga
 	formatter.Status = transaksi.Status
 	formatter.CreatedAt = transaksi.CreatedAt
-
+	formatter.Produk.Nama = transaksi.Produk.NamaProduk
 	produkFormatter := ProdukFormatter{}
-	produkFormatter.Nama = transaksi.Produk.NamaProduk
 	produkFormatter.GambarURL = ""
 
 	if len(transaksi.Produk.GambarProduks) > 0 {
@@ -78,4 +78,26 @@ func FormatUserTransaksis(transaksi []Transaksi) []UserTransaksiFormatter {
 	}
 
 	return transaksisFormatter
+}
+
+type TransaksiFormatter struct {
+	ID         int    `json:"id"`
+	ProdukID   int    `json:"produk_id"`
+	UserID     int    `json:"user_id"`
+	Harga      int    `json:"harga"`
+	Status     string `json:"status"`
+	Code       string `json:"code"`
+	PaymentURL string `json:"payment_url"`
+}
+
+func FormatTransaksi(transaksi Transaksi) TransaksiFormatter {
+	formatter := TransaksiFormatter{}
+	formatter.ID = transaksi.ID
+	formatter.ProdukID = transaksi.ProdukID
+	formatter.UserID = transaksi.UserID
+	formatter.Harga = transaksi.Harga
+	formatter.Status = transaksi.Status
+	formatter.Code = transaksi.Code
+	formatter.PaymentURL = transaksi.PaymentURL
+	return formatter
 }

@@ -8,7 +8,8 @@ type GetProdukTransaksisInput struct {
 }
 
 type CreateTransaksiInput struct {
-	Harga    int `json:"harga" binding:"required"`
-	ProdukID int `json:"produk_id" binding:"required"`
-	User     user.User
+	Harga      int    `json:"harga" binding:"required"`
+	ProdukID   int    `json:"produk_id" binding:"required"`
+	PaymentURL string `json:"payment_url" binding:"required`
+	User       user.User
 }

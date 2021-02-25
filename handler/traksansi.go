@@ -55,7 +55,7 @@ func (h *transaksiHandler) GetUserTransaksis(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (h *transaksiHandler) CreaterTransaksi(c *gin.Context) {
+func (h *transaksiHandler) CreateTransaksi(c *gin.Context) {
 	var input transaksi.CreateTransaksiInput
 
 	err := c.ShouldBindJSON(&input)
@@ -72,12 +72,12 @@ func (h *transaksiHandler) CreaterTransaksi(c *gin.Context) {
 
 	newTransaksi, err := h.service.CreateTransaksi(input)
 	if err != nil {
-		response := helper.APIResponse("Gagal create transaksi", http.StatusBadRequest, "Error", nil)
+		response := helper.APIResponse("Gagal create transaksis", http.StatusBadRequest, "Error", nil)
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 
-	response := helper.APIResponse("Sukses create transaksi", http.StatusOK, "Sukses", newTransaksi)
+	response := helper.APIResponse("Sukses create transaksi", http.StatusOK, "Sukses", transaksi.FormatTransaksi(newTransaksi))
 	c.JSON(http.StatusOK, response)
 	return
 

@@ -57,26 +57,26 @@ func (s *service) CreateTransaksi(input CreateTransaksiInput) (Transaksi, error)
 	transaksi.UserID = input.User.ID
 	transaksi.Status = "pending"
 
-	newTransaksis, err := s.repo.Save(transaksi)
+	newTransaksi, err := s.repo.Save(transaksi)
 	if err != nil {
-		return newTransaksis, err
+		return newTransaksi, err
 	}
 	paymentTransaksi := payment.Transaksi{
-		ID:    newTransaksis.ID,
-		Harga: newTransaksis.Harga,
+		ID:    newTransaksi.ID + newTransaksi.UserID + newTransaksi.UserID,
+		Harga: newTransaksi.Harga,
 	}
 
-	paymentURL, err := s.paymentService.GetPaymetURL(paymentTransaksi, input.User)
+	paymentURL, err := s.paymentService.GetPaymentURL(paymentTransaksi, input.User)
 	if err != nil {
-		return newTransaksis, err
+		return newTransaksi, err
 	}
 
-	newTransaksis.PaymentURL = paymentURL
+	newTransaksi.PaymentURL = paymentURL
 
-	newTransaksis, err = s.repo.Update(newTransaksis)
+	newTransaksi, err = s.repo.Update(newTransaksi)
 	if err != nil {
-		return newTransaksis, err
+		return newTransaksi, err
 	}
 
-	return newTransaksis, nil
+	return newTransaksi, nil
 }

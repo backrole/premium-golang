@@ -3,13 +3,15 @@ package produk
 import "strings"
 
 type ProdukFormatter struct {
-	ID         int    `json:"id"`
-	UserID     int    `json:"user_id"`
-	NamaProduk string `json:"nama_produk"`
-	Judul      string `json:"judul"`
-	GambarURL  string `json:"gambar_url"`
-	Harga      int    `json:"harga"`
-	Slug       string `json:"slug"`
+	ID            int    `json:"id"`
+	UserID        int    `json:"user_id"`
+	NamaProduk    string `json:"nama_produk"`
+	Deskripsi     string `json:"deskripsi"`
+	JumlahPembeli int    `json:"jumlah_pembeli"`
+	Judul         string `json:"judul"`
+	GambarURL     string `json:"gambar_url"`
+	Harga         int    `json:"harga"`
+	Slug          string `json:"slug"`
 }
 
 func FormatProduk(produk Produk) ProdukFormatter {
@@ -17,6 +19,8 @@ func FormatProduk(produk Produk) ProdukFormatter {
 	produkFormatter.ID = produk.ID
 	produkFormatter.UserID = produk.UserID
 	produkFormatter.NamaProduk = produk.NamaProduk
+	produkFormatter.Deskripsi = produk.Deskripsi
+	produkFormatter.JumlahPembeli = produk.JumlahPembeli
 	produkFormatter.Judul = produk.Judul
 	produkFormatter.Harga = produk.Harga
 	produkFormatter.Slug = produk.Slug
