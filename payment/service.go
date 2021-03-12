@@ -1,7 +1,6 @@
 package payment
 
 import (
-	"log"
 	"premium/user"
 	"strconv"
 
@@ -20,9 +19,10 @@ func NewService() *service {
 }
 
 func (s *service) GetPaymentURL(transaksi Transaksi, user user.User) (string, error) {
+
 	midclient := midtrans.NewClient()
-	midclient.ServerKey = ""
-	midclient.ClientKey = ""
+	midclient.ServerKey = "SB-Mid-server-lVSb2InwtN6Cv8vy6DqzvZzG"
+	midclient.ClientKey = "SB-Mid-client-N-mLFyOCuq1R0FJb"
 	midclient.APIEnvType = midtrans.Sandbox
 
 	var snapGateway midtrans.SnapGateway
@@ -41,29 +41,10 @@ func (s *service) GetPaymentURL(transaksi Transaksi, user user.User) (string, er
 		},
 	}
 
-	log.Println("GetToken:")
-	snapTokenResp, _ := snapGateway.GetToken(snapReq)
+	snapTokenResp, err := snapGateway.GetToken(snapReq)
+	if err != nil {
+		return "", err
+	}
 
 	return snapTokenResp.RedirectURL, nil
-	// snapGateway := midtrans.SnapGateway{
-	// 	Client: midclient,
-	// }
-	// snapReq := &midtrans.SnapReq{
-	// 	CustomerDetail: &midtrans.CustDetail{
-	// 		Email: user.Email,
-	// 		FName: user.Nama,
-	// 	},
-	// 	TransactionDetails: midtrans.TransactionDetails{
-	// 		OrderID:  strconv.Itoa(transaksi.ID),
-	// 		GrossAmt: int64(transaksi.Harga),
-	// 	},
-	// }
-
-	// snapTokenResp, err := snapGateway.GetToken(snapReq)
-	// if err != nil {
-	// 	return "", err
-	// }
-
-	// return snapTokenResp.RedirectURL, nil
-
 }

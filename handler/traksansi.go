@@ -82,3 +82,23 @@ func (h *transaksiHandler) CreateTransaksi(c *gin.Context) {
 	return
 
 }
+
+func (h *transaksiHandler) GetNotifikasi(c *gin.Context) {
+	var input transaksi.TransaksiNotifikasiInput
+
+	err := c.ShouldBindJSON(&input)
+
+	if err != nil {
+		response := helper.APIResponse("Gagal proses notifikasi", http.StatusBadRequest, "Error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	err = h.service.ProsesPayment(input)
+	if err != nil {
+		response := helper.APIResponse("Gagal proses notifikasi", http.StatusBadRequest, "Error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	c.JSON(http.StatusOK, input)
+}

@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -27,7 +28,8 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 	user.Nama = input.Nama
 	user.Email = input.Email
 	user.Kampus = input.Kampus
-
+	user.Created_at = time.Now()
+	user.Updated_at = time.Now()
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 
 	if err != nil {

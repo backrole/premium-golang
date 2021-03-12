@@ -4,6 +4,7 @@ import (
 	"errors"
 	"premium/payment"
 	"premium/produk"
+	"strconv"
 )
 
 type service struct {
@@ -16,6 +17,7 @@ type Service interface {
 	GetTransaksiByProdukID(input GetProdukTransaksisInput) ([]Transaksi, error)
 	GetTransaksiByUserID(userID int) ([]Transaksi, error)
 	CreateTransaksi(input CreateTransaksiInput) (Transaksi, error)
+	ProsesPayment(input TransaksiNotifikasiInput) error
 }
 
 func NewService(repo Repo, produkRepo produk.Repo, paymentService payment.Service) *service {
@@ -61,8 +63,11 @@ func (s *service) CreateTransaksi(input CreateTransaksiInput) (Transaksi, error)
 	if err != nil {
 		return newTransaksi, err
 	}
+
+	// trans, _ := s.repo.GetByProdukID(transaksi.ProdukID)
+
 	paymentTransaksi := payment.Transaksi{
-		ID:    newTransaksi.ID + newTransaksi.UserID + newTransaksi.UserID,
+		ID:    newTransaksi.ID,
 		Harga: newTransaksi.Harga,
 	}
 
@@ -79,4 +84,40 @@ func (s *service) CreateTransaksi(input CreateTransaksiInput) (Transaksi, error)
 	}
 
 	return newTransaksi, nil
+}
+func (s *service) ProsesPayment(input TransaksiNotifikasiInput) error {
+	transaction_id, _ := strconv.Atoi(input.OrderID)
+
+	transaction, err := s.repo.GetByID(transaction_id)
+	if err != nil {
+		return err
+	}
+
+	if input.PaymentType == "credit_card" && input.TransactionStatus == "capture" && input.FraudStatus == "accept" {
+		input.TransactionStatus = "paid"
+	} else if input.TransactionStatus == "settlement" {
+		input.TransactionStatus = "paid"
+	} else if input.TransactionStatus == "deny" || input.TransactionStatus == "expire" || input.TransactionStatus == "cancel" {
+		transaction.Status = "cancelled"
+	}
+
+	updatedTransaksi, err := s.repo.Update(transaction)
+	if err != nil {
+		return err
+	}
+
+	produk, err := s.produkRepo.FindByID(updatedTransaksi.ProdukID)
+	if err != nil {
+		return err
+	}
+	if updatedTransaksi.Status == "paid" {
+		produk.JumlahPembeli = produk.JumlahPembeli + 1
+
+		_, err := s.produkRepo.Update(produk)
+
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

@@ -54,7 +54,7 @@ type ProdukDetailFormatter struct {
 	UserID        int                    `json:"user_id"`
 	Slug          string                 `json:"slug"`
 	Perks         []string               `json:"perks"`
-	User          ProdukUserFormatter    `json:"use"`
+	User          ProdukUserFormatter    `json:"user"`
 	Images        []ProdukImageFormatter `json:"images"`
 }
 

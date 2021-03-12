@@ -11,6 +11,7 @@ type repo struct {
 type Repo interface {
 	GetByProdukID(produkID int) ([]Transaksi, error)
 	GetByUserID(userID int) ([]Transaksi, error)
+	GetByID(ID int) (Transaksi, error)
 	Save(transaksi Transaksi) (Transaksi, error)
 	Update(transaksi Transaksi) (Transaksi, error)
 }
@@ -39,6 +40,18 @@ func (r *repo) GetByUserID(userID int) ([]Transaksi, error) {
 		return transaksis, err
 	}
 	return transaksis, nil
+
+}
+
+func (r *repo) GetByID(ID int) (Transaksi, error) {
+	var transaksi Transaksi
+
+	err := r.db.Where("id = ?", ID).Find(&transaksi).Error
+	if err != nil {
+		return transaksi, err
+	}
+
+	return transaksi, nil
 
 }
 func (r *repo) Save(transaksi Transaksi) (Transaksi, error) {

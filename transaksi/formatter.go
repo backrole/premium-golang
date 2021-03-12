@@ -1,6 +1,8 @@
 package transaksi
 
-import "time"
+import (
+	"time"
+)
 
 type ProdukTransaksiFormatter struct {
 	ID        int       `json:"id"`
@@ -40,11 +42,16 @@ type UserTransaksiFormatter struct {
 	PaymentURL string          `json:"payment_url"`
 	CreatedAt  time.Time       `json:"created_at"`
 	Produk     ProdukFormatter `json:"produk"`
+	User       UserFormatter   `json:"user"`
 }
 
 type ProdukFormatter struct {
-	Nama      string `json:"nama"`
-	GambarURL string `json:"gambar_url"`
+	NamaProduk string `json:"nama"`
+	GambarURL  string `json:"gambar_url"`
+}
+
+type UserFormatter struct {
+	Nama string `json:"nama_user"`
 }
 
 func FormatUserTransaksi(transaksi Transaksi) UserTransaksiFormatter {
@@ -53,13 +60,16 @@ func FormatUserTransaksi(transaksi Transaksi) UserTransaksiFormatter {
 	formatter.Harga = transaksi.Harga
 	formatter.Status = transaksi.Status
 	formatter.CreatedAt = transaksi.CreatedAt
-	formatter.Produk.Nama = transaksi.Produk.NamaProduk
+	formatter.User.Nama = transaksi.User.Nama
+
 	produkFormatter := ProdukFormatter{}
+	produkFormatter.NamaProduk = transaksi.Produk.NamaProduk
 	produkFormatter.GambarURL = ""
 
 	if len(transaksi.Produk.GambarProduks) > 0 {
 		produkFormatter.GambarURL = transaksi.Produk.GambarProduks[0].NamaGambar
 	}
+
 	formatter.Produk = produkFormatter
 	return formatter
 

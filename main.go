@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -41,12 +42,14 @@ func main() {
 	transaksiHandler := handler.NewTransaksiHandler(transaksiService)
 
 	router := gin.Default()
+	router.Use(cors.Default())
 	router.Static("/images", "./images")
 	api := router.Group("/api/v1")
 	api.POST("/users", userHandler.RegisterUser)
 	api.POST("/sessions", userHandler.Login)
 	api.POST("/email_ceks", userHandler.CheckEmailAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+	api.GET("/users/fetch", authMiddleware(authService, userService), userHandler.FetchUser)
 	api.GET("/produks", produkHandler.GetProduks)
 	api.GET("/produks/:id", produkHandler.GetProduk)
 	api.POST("/produks", authMiddleware(authService, userService), produkHandler.CreateProduk)
@@ -55,6 +58,7 @@ func main() {
 	api.GET("/produk/:id/transaksi", authMiddleware(authService, userService), transaksiHandler.GetProdukTransaksis)
 	api.GET("/transaksi", authMiddleware(authService, userService), transaksiHandler.GetUserTransaksis)
 	api.POST("/transaksis", authMiddleware(authService, userService), transaksiHandler.CreateTransaksi)
+
 	router.Run(":8888")
 }
 func authMiddleware(authService auth.Service, userService user.Service) gin.HandlerFunc {

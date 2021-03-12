@@ -55,8 +55,7 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 }
 
 func (h *userHandler) Login(c *gin.Context) {
-	
-	
+
 	var input user.LoginInput
 
 	err := c.ShouldBindJSON(&input)
@@ -82,8 +81,8 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 	formatter := user.FormatUser(loggedinUser, token)
-	response := helper.APIResponse("Login SUKSES", http.StatusUnprocessableEntity, "Sukses", formatter)
-	c.JSON(http.StatusUnprocessableEntity, response)
+	response := helper.APIResponse("Login SUKSES", http.StatusOK, "Sukses", formatter)
+	c.JSON(http.StatusOK, response)
 }
 
 func (h *userHandler) CheckEmailAvailability(c *gin.Context) {
@@ -165,5 +164,14 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 	return
+
+}
+
+func (h *userHandler) FetchUser(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(user.User)
+	formatter := user.FormatUser(currentUser, "")
+	response := helper.APIResponse("Sukses fetch user", http.StatusOK, "sukses", formatter)
+
+	c.JSON(http.StatusOK, response)
 
 }
